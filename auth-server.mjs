@@ -6,6 +6,8 @@ export async function hashPassword(password,salt=randomBytes(24).toString('hex')
 export async function verifyPassword(password,record){if(typeof password!=='string'||password.length>256||!/^scrypt\$32768\$[a-f0-9]{48}\$[a-f0-9]{128}$/.test(record||''))return false;const [, ,salt,expected]=record.split('$');const actual=(await hashPassword(password,salt)).split('$')[3];return timingSafeEqual(Buffer.from(actual,'hex'),Buffer.from(expected,'hex'));}
 const digest=value=>createHash('sha256').update(value).digest('hex');
 export function createAuth({store,env,now=()=>Date.now()}){
+ env={...env};
+ const ready=(async()=>{if(!env.ADMIN_PASSWORD_HASH&&typeof env.ADMIN_PASSWORD==='string'&&env.ADMIN_PASSWORD.length>=7){const salt=digest('joongwonsusan-password-salt:'+String(env.SITE_ID||'local')).slice(0,48);env.ADMIN_PASSWORD_HASH=await hashPassword(env.ADMIN_PASSWORD,salt);}if(!env.SESSION_SECRET&&env.ADMIN_PASSWORD_HASH)env.SESSION_SECRET=digest('session-version:'+env.ADMIN_PASSWORD_HASH);})();
  const configured=()=>!!env.ADMIN_USERNAME&&/^scrypt\$32768\$[a-f0-9]{48}\$[a-f0-9]{128}$/.test(env.ADMIN_PASSWORD_HASH||'')&&env.SESSION_SECRET?.length>=32;
  const cookie=(value,age=28800)=>`${COOKIE}=${value}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=${age}`;
  async function reserveAttempt(ip){const bucket=Math.floor(now()/900000),who=createHmac('sha256',env.SESSION_SECRET).update(ip||'unknown').digest('hex');for(let slot=0;slot<8;slot++){const key=`auth/attempts/${bucket}/${who}/${slot}`;if((await store.setJSON(key,{expires:now()+900000},{onlyIfNew:true})).modified)return true;}return false;}
@@ -13,5 +15,5 @@ export function createAuth({store,env,now=()=>Date.now()}){
  function tokenFrom(req){return req.headers.get('cookie')?.split(';').map(s=>s.trim()).find(s=>s.startsWith(COOKIE+'='))?.slice(COOKIE.length+1);}
  async function authenticated(req){if(!configured())return false;const token=tokenFrom(req);if(!/^[A-Za-z0-9_-]{43}$/.test(token||''))return false;const session=await store.get('auth/sessions/'+digest(token),{type:'json'});return !!session&&session.expires>now()&&session.username===env.ADMIN_USERNAME&&session.credential===digest(env.ADMIN_PASSWORD_HASH+env.SESSION_SECRET);}
  async function logout(req){const token=tokenFrom(req);if(token)await store.delete('auth/sessions/'+digest(token));return cookie('',0);}
- return {configured,login,authenticated,logout};
+ return {configured,login,authenticated,logout,ready};
 }

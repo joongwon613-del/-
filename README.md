@@ -6,7 +6,7 @@
 Netlify에 이 저장소의 main 브랜치를 연결합니다. 빌드 명령은 npm test && npm run build, 게시 폴더는 public입니다.
 
 ## 관리자 설정
-/admin에서 로그인합니다. 배포 환경변수 ADMIN_USERNAME, ADMIN_PASSWORD_HASH, SESSION_SECRET을 설정해야 합니다. 비밀번호는 scrypt 해시만 서버 환경변수로 보관하며 공개 소스에 포함하지 않습니다. 세션은 8시간이며 서버에서 검증합니다.
+/admin에서 로그인합니다. 서버 환경변수 ADMIN_USERNAME과 ADMIN_PASSWORD를 설정합니다. 비밀번호는 Netlify의 비밀 환경변수에만 입력하며 공개 소스와 페이지에는 포함하지 않습니다. 서버는 scrypt로 변환하여 검증합니다. 대신 ADMIN_PASSWORD_HASH(scrypt 해시)를 설정해도 됩니다. SESSION_SECRET은 선택 설정입니다. 세션은 8시간이며 서버에서 검증합니다.
 
 메뉴·회사명·대표자·연락처·마크·메인 사진·품목·공지·페이지 문구·링크·사진·공개 여부·검색 제목·문의폼 항목을 수정하고 백업을 복원할 수 있습니다. 문의폼은 고객이 문자 앱에서 직접 발송하며 서버에 문의 개인정보를 수집하지 않습니다.
 

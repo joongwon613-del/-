@@ -14,6 +14,7 @@ export function createHandler({store,assets,defaults,env,now=()=>Date.now()}){
  const content=async()=>{const item=await store.getWithMetadata('cms/content.json',{type:'json'});return {content:item?{...defaults,...item.data}:defaults,revision:item?.etag||'initial'};};
  const asset=(key,status=200)=>{const a=assets[key];return a?new Response(Buffer.from(a.data,'base64'),{status,headers:{...headers,'Content-Type':a.type,'X-Frame-Options':'DENY',...(key.startsWith('/admin')||key==='/login.html'?{'X-Robots-Tag':'noindex, nofollow','Content-Security-Policy':"default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' blob:; frame-src 'self'; frame-ancestors 'none'; object-src 'none'; base-uri 'self'"}:{})}}):fail(404,'페이지를 찾을 수 없습니다.');};
  return async(req,context={})=>{try{
+  await auth.ready;
   const u=new URL(req.url),p=u.pathname;
   if(req.method!=='GET'&&req.method!=='HEAD'&&req.headers.get('origin')!==u.origin)return fail(403,'요청 출처를 확인할 수 없습니다.');
   if(p==='/admin/login'||p==='/admin/login/'){if(req.method!=='GET')return fail(405,'허용되지 않은 요청입니다.');return asset('/login.html');}
