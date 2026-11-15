@@ -1,0 +1,16 @@
+{
+  "heroTitle": "제주의 바다를,\n당신의 거래처로.",
+  "heroDescription": "제주광어부터 도다리, 찰광어까지.\n산지와 유통 현장을 잇는 도매 파트너, 중원수산.",
+  "heroImage": "/assets/hero.png",
+  "heroImageCaption": "제주 바다 콘셉트 이미지",
+  "companyDescription": "중원수산은 제주광어·도다리·찰광어 등 활어 공급을 상담하는 산지 유통 파트너입니다. 활어 도매상과 수산물 유통업체의 품목, 규격, 물량을 확인하고 산지의 출하 가능 조건을 연결합니다.",
+  "farmDescription": "원하시는 품목과 사이즈, 필요한 물량을 알려주시면 산지의 공급 가능 여부를 확인합니다. 요청 납기와 도착 지역을 바탕으로 운송 조건까지 함께 안내합니다.",
+  "shippingNotice": "선결제 확인 후 협의한 일정에 맞춰 출고합니다. 품목별 단가·규격·최소 물량·운송비는 상담 시 확인해 주세요.",
+  "noticeTitle": "",
+  "noticeBody": "",
+  "products": [
+    {"name":"제주광어","description":"제주 산지에서 확인하는 활어 공급. 희망 중량과 필요 물량에 맞춰 출하 가능 여부를 안내합니다.","image":"/assets/logo.png","status":"공급 상담","visible":true},
+    {"name":"도다리","description":"거래처에서 찾는 규격과 품종을 먼저 확인하고, 산지 상황에 맞는 공급 조건을 협의합니다.","image":"/assets/logo.png","status":"공급 상담","visible":true},
+    {"name":"찰광어","description":"희망 규격과 수량, 필요한 날짜를 기준으로 공급 가능 물량과 일정을 확인합니다.","image":"/assets/logo.png","status":"공급 상담","visible":true}
+  ]
+}

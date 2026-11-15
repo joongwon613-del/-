@@ -1,0 +1,1 @@
+{"name":"joongwonsusan-website","version":"2.0.0","private":true,"type":"module","engines":{"node":">=22.13.0"},"scripts":{"build":"node build-netlify.mjs","test":"node build-netlify.mjs && node --test test-netlify.mjs","preview":"node preview.mjs"},"dependencies":{"@netlify/blobs":"11.1.7"}}

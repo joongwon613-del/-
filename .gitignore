@@ -1,0 +1,7 @@
+node_modules/
+public/
+netlify/functions/
+netlify/lib/
+.netlify/
+.env
+.env.*
