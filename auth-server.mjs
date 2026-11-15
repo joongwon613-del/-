@@ -7,7 +7,7 @@ export async function verifyPassword(password,record){if(typeof password!=='stri
 const digest=value=>createHash('sha256').update(value).digest('hex');
 export function createAuth({store,env,now=()=>Date.now()}){
  env={...env};
- const ready=(async()=>{if(!env.ADMIN_PASSWORD_HASH&&typeof env.ADMIN_PASSWORD==='string'&&env.ADMIN_PASSWORD.length>=7){const salt=digest('joongwonsusan-password-salt:'+String(env.SITE_ID||'local')).slice(0,48);env.ADMIN_PASSWORD_HASH=await hashPassword(env.ADMIN_PASSWORD,salt);}if(!env.SESSION_SECRET&&env.ADMIN_PASSWORD_HASH)env.SESSION_SECRET=digest('session-version:'+env.ADMIN_PASSWORD_HASH);})();
+ const ready=(async()=>{if(!env.ADMIN_PASSWORD_HASH&&typeof env.ADMIN_PASSWORD==='string'&&env.ADMIN_PASSWORD.length>=6){const salt=digest('joongwonsusan-password-salt:'+String(env.SITE_ID||'local')).slice(0,48);env.ADMIN_PASSWORD_HASH=await hashPassword(env.ADMIN_PASSWORD,salt);}if(!env.SESSION_SECRET&&env.ADMIN_PASSWORD_HASH)env.SESSION_SECRET=digest('session-version:'+env.ADMIN_PASSWORD_HASH);})();
  const configured=()=>!!env.ADMIN_USERNAME&&/^scrypt\$32768\$[a-f0-9]{48}\$[a-f0-9]{128}$/.test(env.ADMIN_PASSWORD_HASH||'')&&env.SESSION_SECRET?.length>=32;
  const cookie=(value,age=28800)=>`${COOKIE}=${value}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=${age}`;
  async function reserveAttempt(ip){const bucket=Math.floor(now()/900000),who=createHmac('sha256',env.SESSION_SECRET).update(ip||'unknown').digest('hex');for(let slot=0;slot<8;slot++){const key=`auth/attempts/${bucket}/${who}/${slot}`;if((await store.setJSON(key,{expires:now()+900000},{onlyIfNew:true})).modified)return true;}return false;}
